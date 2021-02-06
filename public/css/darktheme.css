@@ -1,0 +1,24 @@
+:root {
+  --primary-color: #302AE6;
+  --secondary-color: #536390;
+  --font-color: #333;
+  --bg-color: #efefef;
+  --card-color: #fff;
+}
+
+[data-theme="dark"] {
+  --primary-color: #9A97F3;
+  --secondary-color: #818cab;
+  --font-color: #e1e1ff;
+  --bg-color: #292922;
+  --card-color: transparent;
+}
+
+body {
+  background-color: var(--bg-color) !important;
+  color: var(--font-color) !important;
+}
+
+h1,h2,h3,h4,h5,h6,p,div {
+  color: var(--font-color);
+}
