@@ -8,7 +8,7 @@ import store from './store'
 
 Vue.config.productionTip = false
 
-App.use(Antd)
+Vue.use(Antd)
 
 new Vue({
   router,
