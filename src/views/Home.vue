@@ -193,7 +193,6 @@ export default {
       margin-bottom: 4px;
     }
     &__date {
-      color: #606060;
       font-size: 12px;
     }
   }
