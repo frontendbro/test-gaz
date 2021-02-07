@@ -17,16 +17,25 @@
         </div>
         <div class="message" v-if="messageList.length">
           <div class="message-wrap" v-for="message of messageList" :key="message.id">
-            <a-card class="message-card">
-              <a-card-meta
-                :title="message.textMessage"
-                :description="$date(message.dateCreate).format('DD/MM/YYYY-HH:mm:ss')"
-              >
-                <a-tooltip placement="topLeft" title="Prompt Text">
-                  <a-avatar slot="avatar" icon="user" :src="message.user.url" />
-                </a-tooltip>
-              </a-card-meta>
-            </a-card>
+            <div class="message-card">
+              <a-tooltip placement="topLeft" :title="message.user.name">
+                <div>
+                  <a-avatar
+                    class="message-card__avatar"
+                    slot="avatar"
+                    icon="user"
+                    :src="message.user.url"
+                  />
+                </div>
+              </a-tooltip>
+
+              <div>
+                <div class="message-card__title">{{ message.textMessage }}</div>
+                <div class="message-card__date">
+                  {{ $date(message.dateCreate).format('DD/MM/YYYY-HH:mm:ss') }}
+                </div>
+              </div>
+            </div>
             <div
               class="comment"
               v-for="comment of message.comments.length > 3
@@ -35,7 +44,11 @@
               :key="comment.id"
             >
               <div class="comment-avatar">
-                <a-avatar style="flex-grow: 1" slot="avatar" icon="user" :src="message.user.url" />
+                <a-tooltip placement="topLeft" :title="comment.user.name">
+                  <div>
+                    <a-avatar slot="avatar" icon="user" :src="message.user.url" />
+                  </div>
+                </a-tooltip>
               </div>
               <div>{{ comment.textMessage }}</div>
             </div>
@@ -75,10 +88,23 @@ export default {
       }
     }
   },
+  // mounted() {
+  //   if (localStorage.getItem('messageList')) {
+  //     this.messageListComp = JSON.parse(localStorage.getItem('messageListComponents'))
+  //   } else {
+  //     this.messageListComponents = this.messageList
+  //   }
+  // },
   computed: {
     ...mapState(['messageList']),
     ...mapGetters(['popularComments'])
   },
+  // watch: {
+  //   messageListComponents() {
+  //     const parsed = JSON.stringify(this.messageListComponents)
+  //     localStorage.setItem('messageListComponents', parsed)
+  //   }
+  // },
   methods: {
     ...mapActions(['CreateNewPost']),
     ...mapMutations(['CREATE_NEW_COMMENT']),
@@ -160,14 +186,19 @@ export default {
   }
   &-card {
     display: flex;
+    padding: 16px;
     margin-bottom: 16px;
     background-color: var(--card-color);
-    ::v-deep .ant-card-meta-title,
-    ::v-deep .ant-card-meta-description {
-      color: var(--font-color) !important;
+    &__avatar {
+      margin-right: 8px;
     }
-    ::v-deep .ant-card-body {
-      max-width: 100%;
+    &__title {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+    &__date {
+      color: #606060;
+      font-size: 12px;
     }
   }
 }
