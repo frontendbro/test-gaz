@@ -30,7 +30,7 @@ export default new Vuex.Store({
             textMessage: `Текст комментария ${count}`
           }
         })
-      }, (29000 - 4000) * Math.random() + 4000)
+      }, 25000 * Math.random() + 5000)
 
       if (count === 3) {
         clearInterval(timer)

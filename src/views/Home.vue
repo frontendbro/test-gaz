@@ -6,11 +6,14 @@
           <a-switch checked-children="светлая" un-checked-children="тёмная" @change="changeTheme" />
         </div>
         <div class="action-bar">
-          <a-input
-            @keydown.enter="createNewPost"
-            v-model="newPostTxt"
-            placeholder="О чём вы думаете"
-          />
+          <a-tooltip title="Можно вставить URL картинки">
+            <a-input
+              @keydown.enter="createNewPost"
+              v-model="newPostTxt"
+              placeholder="О чём вы думаете?"
+            />
+          </a-tooltip>
+
           <a-button @click="createNewPost" class="action-bar__btn" type="primary"
             >Поделиться</a-button
           >
@@ -30,7 +33,7 @@
               </a-tooltip>
 
               <div>
-                <div class="message-card__title">{{ message.textMessage }}</div>
+                <div class="message-card__title" v-html="message.textMessage"></div>
                 <div class="message-card__date">
                   {{ $date(message.dateCreate).format('DD/MM/YYYY-HH:mm:ss') }}
                 </div>
@@ -65,7 +68,7 @@
             :key="popular.id"
           >
             <div class="popular-item__count">{{ popular.comments.length }}</div>
-            <div class="popular-item__txt">{{ popular.textMessage }}</div>
+            <div class="popular-item__txt" v-html="popular.textMessage"></div>
           </div>
         </div>
       </a-col>
@@ -88,23 +91,15 @@ export default {
       }
     }
   },
-  // mounted() {
-  //   if (localStorage.getItem('messageList')) {
-  //     this.messageListComp = JSON.parse(localStorage.getItem('messageListComponents'))
-  //   } else {
-  //     this.messageListComponents = this.messageList
-  //   }
-  // },
   computed: {
     ...mapState(['messageList']),
-    ...mapGetters(['popularComments'])
+    ...mapGetters(['popularComments']),
+    textWithPreview() {
+      const re = /(https?|ftp):\/\/\S+[^\s.,> )\];'\"!?]/
+      const subst = '<img src="$&" alt="$&" width="100" height="100" />'
+      return this.newPostTxt.replace(re, subst)
+    }
   },
-  // watch: {
-  //   messageListComponents() {
-  //     const parsed = JSON.stringify(this.messageListComponents)
-  //     localStorage.setItem('messageListComponents', parsed)
-  //   }
-  // },
   methods: {
     ...mapActions(['CreateNewPost']),
     ...mapMutations(['CREATE_NEW_COMMENT']),
@@ -114,7 +109,7 @@ export default {
         id: Math.random()
           .toString(36)
           .substr(2, 9),
-        textMessage: this.newPostTxt,
+        textMessage: this.textWithPreview,
         dateCreate: this.$date(),
         comments: []
       }
@@ -189,6 +184,7 @@ export default {
     padding: 16px;
     margin-bottom: 16px;
     background-color: var(--card-color);
+    overflow: hidden;
     &__avatar {
       margin-right: 8px;
     }
